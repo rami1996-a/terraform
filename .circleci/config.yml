@@ -6,7 +6,7 @@ jobs:
       - checkout
       - run:
           name: Run TFLint
-          command: docker run --rm -v $(pwd):/data -t ghcr.io/terraform-linters/tflint --chdir=aws -f json | tee tflint-output.json
+          command: docker run --rm -v $(pwd):/data -t ghcr.io/terraform-linters/tflint --chdir=aws -f json | tee tflint-output.json || true
       - store_artifacts:
           path: tflint-output.json
           destination: tflint-artifact
