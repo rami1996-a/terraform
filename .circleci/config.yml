@@ -1,10 +1,15 @@
 version: 2.1
 jobs:
-  build:
+  tflint:
     machine: true
     steps:
       - checkout
-      - run: echo "This is a build step"
+      - run:
+          name: Run TFLint
+          command: docker run --rm -v $(pwd):/data -t ghcr.io/terraform-linters/tflint --chdir=aws -f json | tee tflint-output.json
+      - store_artifacts:
+          path: tflint-output.json
+          destination: tflint-artifact
   test:
     machine: true
     steps:
@@ -27,10 +32,10 @@ workflows:
   version: 2
   django:
     jobs:
-      - build
+      - tflint
       - test:
           requires:
-            - build
+            - tflint
       - integration:
           requires:
             - test
