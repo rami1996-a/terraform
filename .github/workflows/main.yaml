@@ -6,8 +6,24 @@ on:
       - main
 
 jobs:
+  terrascan:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run Terrascan
+        id: terrascan
+        uses: tenable/terrascan-action@v1
+        with:
+          iac_type: 'terraform'
+          iac_version: 'v14'
+          policy_type: 'aws'
+          only_warn: true
+          iac_dir: 'aws'
   tflint:
     runs-on: ubuntu-22.04
+    needs: terrascan
     steps:
       - name: Checkout
         uses: actions/checkout@v2
